@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class RunWorkflowTest(TestCase):
-    
+
     def test_output_dataframe(self):
         dataframe = pd.DataFrame()
         df_out = run_workflow(dataframe)
