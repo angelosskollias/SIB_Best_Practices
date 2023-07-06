@@ -1,12 +1,23 @@
-from unittest import TestCase
+from unittest import TestCase, mock
 from workflow import run_workflow
 import pandas as pd
 
 
 class RunWorkflowTest(TestCase):
     def setUp(self):
-        self.dataframe = pd.DataFrame({"id": [1, 2, 3], "smiles": ["xy", "CD", "FGH"]})
+        self.dataframe = pd.DataFrame({
+            "id": [1, 2, 3], 
+            "smiles": ["xy", "CD", "FGH"]})
+
+        self.patcher = mock.patch('workflow.numberHeavyAtoms')
+        self.mock_numberHeavyAtoms = self.patcher.start()
+        def fake_heavy_atoms(smiles):
+            return {"xy": 6, "CD": 4, "FGH": 8}[smiles]
+        self.mock_numberHeavyAtoms.side_effect = fake_heavy_atoms
     
+    def tearDown(self) -> None:
+        self.patcher.stop()
+
     def test_output_dataframe(self):
         df_out = run_workflow(self.dataframe)
         self.assertIsInstance(df_out, pd.DataFrame)
