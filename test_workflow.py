@@ -14,7 +14,7 @@ class RunWorkflowTest(TestCase):
     def test_dataframe_consistancy(self):
         df_out = run_workflow(self.dataframe)
         number_of_rows = df_out.shape[0]
-        self.assertEqual(dataframe.merge(df_out, on=["id", "smiles"]).shape[0], number_of_rows)
+        self.assertEqual(df_out.merge(df_out, on=["id", "smiles"]).shape[0], number_of_rows)
         
     def test_has_heavy_atom_column(self):
         df_out = run_workflow(self.dataframe)
