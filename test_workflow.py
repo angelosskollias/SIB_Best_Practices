@@ -12,9 +12,12 @@ class RunWorkflowTest(TestCase):
         self.patcher = mock.patch('workflow.numberHeavyAtoms')
         self.mock_numberHeavyAtoms = self.patcher.start()
         def fake_heavy_atoms(smiles):
-            return {"xy": 6, "CD": 4, "FGH": 8}[smiles]
+            return {"xy": 6, "CD": 4, "FGH": 8}[smiles]           
         self.mock_numberHeavyAtoms.side_effect = fake_heavy_atoms
     
+    def fake_standardization(self, smiles_array):
+        return np.array(["X1Y1", "F1G1H1"])
+        
     def tearDown(self) -> None:
         self.patcher.stop()
 
@@ -34,3 +37,9 @@ class RunWorkflowTest(TestCase):
     def test_filter_heavy_atoms(self):
         df_out = run_workflow(self.dataframe)
         self.assertTrue((df_out['heavy_atoms'] >=6).all())
+        
+    def test_normalized_smiles(self):
+        df_out = run_workflow(self.dataframe, standardization_method=self.fake_standardization)
+        df_out["HOTBIO"].values == ["X1Y1", "F1G1H1"]
+        
+        
