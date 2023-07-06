@@ -32,4 +32,5 @@ class RunWorkflowTest(TestCase):
         self.assertIn("heavy_atoms", df_out.columns)
         
     def test_filter_heavy_atoms(self):
+        df_out = run_workflow(self.dataframe)
         self.assertTrue((df_out['heavy_atoms'] >=6).all())
